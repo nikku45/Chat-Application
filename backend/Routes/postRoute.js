@@ -9,16 +9,26 @@ const verifyToken=require('../middleware.js');
 
 
 // Create a new post
-router.post('/create',async (req, res) => {
-   
- const{content,author,}=req.body;
-//  const id=req.user.id;
-   const newpost=new Post({content,author});
+router.post('/create',verifyToken,async (req, res) => {
+   console.log("hitted")
+ 
+ try{
+  const{content}=req.body;
+  const newpost=new Post({content});
+   console.log(newpost)
+   const id=req.user.id;
+   console.log(id);
+   const user=await User.findById(id);
+   console.log(user)
+   newpost.author=user;
    const result=await newpost.save();
-//   
-//    user.push(newpost);
-//    user.save();
- res.status(200).json({message:"done"});
+   console.log(result);
+  res.status(200).json({message:"done"});
+ }catch(err){
+  res.status(500).json({message:{err}})
+ }
+
+
 
 })
 //get post

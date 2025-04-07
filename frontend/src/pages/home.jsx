@@ -4,16 +4,19 @@ import { useEffect } from "react";
 import Feed from "../components/feed";
 export default function Home() {
   const handleLogout = () => {
+    console.log("handlelogout")
     localStorage.removeItem("token");
     window.location.href = "/login";
   };
   return (
     <>
-      <div className="container mx-auto mt-4">
-        <Feed />
-        <button className="btn" onClick={handleLogout}/>
+      
+      <button  className="bg black"onClick={handleLogout}>
           Logout
-        </div>
+          </button>
+        
+        <Feed />
+       
      
     </>
   );

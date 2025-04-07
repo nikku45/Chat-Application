@@ -7,10 +7,11 @@ const secret = "mysecret";
 
 const verifyToken = (req, res, next) => {
     const token = req.header("Authorization");
-    
+    console.log("in verifytoken")
   
 
     if (!token) {
+        console.log("token is invalid")
         return res.status(401).json({ message: "Access Denied" });
     }
 
