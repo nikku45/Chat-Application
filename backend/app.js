@@ -6,6 +6,7 @@ const cors=require('cors');
 const auth=require('./Routes/authroutes');
 const profile=require('./Routes/profileRoute')
 const post=require('./Routes/postRoute')
+const likecomment=require('./Routes/likecommentroute')
 
 
 
@@ -18,6 +19,8 @@ app.use(express.urlencoded({extended:true}));
 app.use("/api/auth",auth);
 app.use("/api",profile);
 app.use("/api/post",post);
+app.use("/api/posts",likecomment)
+
 
 
 
