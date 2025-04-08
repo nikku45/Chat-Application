@@ -1,5 +1,7 @@
 import React  from "react";
 import { useState } from "react";
+import { toast } from 'react-toastify';
+
 function postForm({onPostCreated}) {
     const [content,setContent]=useState('');
     
@@ -21,14 +23,15 @@ function postForm({onPostCreated}) {
             console.log(res);
             setContent('');
             onPostCreated();
+            toast.success("Post created successfully!");
         }else{
             setContent('')
-            alert("You have to login for creating a Post")
+            toast.error("Failed to create post. Please try again.");
         }
     
 }catch(err){
       console.log("error in generating post",{err});
-      alert("some error occured please try again")
+     
     }
 }
 

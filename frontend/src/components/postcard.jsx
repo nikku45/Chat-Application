@@ -1,5 +1,13 @@
-const PostCard = ({ post }) => {
+import React from "react";
+import { useState } from "react";
+import LikeButton from "./likeSection";
+import CommentSection from "./commentSection";
+
+const PostCard = ({ post,setPosts }) => {
+  const [showcomment, setShowcomment] = useState(false);
+ 
   return (
+      <>
     <div className="bg-white shadow-md rounded-xl p-4 mb-4 border border-gray-200 max-w-xl mx-auto">
       {/* Top section with user info */}
       <div className="flex items-center mb-2">
@@ -19,10 +27,11 @@ const PostCard = ({ post }) => {
 
       {/* Like/Comment buttons (placeholders for now) */}
       <div className="flex justify-start gap-4 text-sm text-gray-600 mt-2">
-        <button className="hover:text-blue-500">👍 Like</button>
-        <button className="hover:text-blue-500">💬 Comment</button>
+       <LikeButton post={post} setPosts={setPosts} />
+        <CommentSection post={post} setPosts={setPosts}/>
       </div>
     </div>
+    </>
   );
 };
 

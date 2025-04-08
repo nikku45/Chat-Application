@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import './index.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import  Login  from './pages/login'
 import Signup from './pages/signup'
 import Home from './pages/home'
@@ -11,6 +13,7 @@ import PrivateRoute from './utils/PrivateRoute'
 function App() {
   return (
     <>
+    <ToastContainer position="top-right" />
     <Router>
        <Routes>
           <Route path='/'      element ={<Home/>} />

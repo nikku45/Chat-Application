@@ -27,21 +27,33 @@ router.post('/:id/like',verifyToken,async(req,res)=>{
 })
 
 //create comment
-router.post('/:id/comment',async(req,res)=>{
-    
-    try{   
-    const {comment}=req.body;
-    let id=req.params.id;
-    // const commentuser=await User.findById(req.user.id);
-    let post=await Post.findById(id);
-    post.comments.content=comment;
-    // post.comments.user=commentuser;
-    await post.save();
-    res.status(200).json({message:"work done"})
-    }catch(err){
-        res.status(501).json({message:"Internal server error"});
-    }
+router.post('/:id/comment',verifyToken, async (req, res) => {
+    try {
+      const { content } = req.body; // Extract the comment content from the request body
+      // Get the authenticated user's ID from the token
+      const userid=req.user.id;
+      const postId = req.params.id; // Get the post ID from the route parameter
+  
+      // Find the post by ID
+      const post = await Post.findById(postId);
+      const founduser=await User.findById(userid)
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+  
+      // Add the new comment to the comments array
+      post.comments.push({ content,user:founduser});
 
-})
+  
+      // Save the updated post
+      const result = (await post.save()).populate("comments", "user" ,"username");
+      console.log(result);
+  
+      res.status(200).json({ message: "Comment added successfully", post: result });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
 
 module.exports=router;

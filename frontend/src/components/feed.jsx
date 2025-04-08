@@ -21,6 +21,7 @@ function Feed() {
         const data = await res.json();
         setPosts(data)
         setLoading(false)
+       
     }
 
     useEffect(() => {
@@ -32,22 +33,22 @@ function Feed() {
         <div className="container">
           {showPostform && <PostForm onPostCreated={fetchPosts} />}
           <button
-   style={{
-    position: "fixed",
-    bottom: "30px",
-    right: "30px",
-    backgroundColor: "#007bff",
-    color: "#fff",
-    border: "none",
-    padding: "14px 18px",
-    borderRadius: "50%",
-    fontSize: "24px",
-    boxShadow: "0 4px 6px rgba(0,0,0,0.2)",
-    cursor: "pointer",
-    zIndex: 1000
-  }}
-  onClick={() => setshowPostform(!showPostform)}
-  >
+       style={{
+       position: "fixed",
+       bottom: "30px",
+       right: "30px",
+       backgroundColor: "#007bff",
+        color: "#fff",
+       border: "none",
+       padding: "14px 18px",
+       borderRadius: "50%",
+      fontSize: "24px",
+      boxShadow: "0 4px 6px rgba(0,0,0,0.2)",
+      cursor: "pointer",
+       zIndex: 1000
+      }}
+    onClick={() => setshowPostform(!showPostform)}
+    >
   +
 </button>
 
@@ -63,7 +64,7 @@ function Feed() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1.5 }}
                 >
-                  <PostCard post={post} />
+                  <PostCard post={post} setPosts={setPosts}/>
                 </motion.div>
               ))
             )}
