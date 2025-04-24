@@ -4,7 +4,8 @@ import Message from "./Message"; // Assuming you have a Message component for th
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false); // For mobile menu
   const [isChatOpen, setIsChatOpen] = useState(false); // For chat sidebar
-  
+ const[isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('token')?true:false); // For login state
+
   // Close mobile menu when chat is opened
   useEffect(() => {
     if (isChatOpen) setIsOpen(false);
@@ -91,7 +92,7 @@ export default function Navbar() {
       </div>
 
       {/* Chat Sidebar */}
-      {isChatOpen && (
+      {isChatOpen && isLoggedIn && (
           <div
           className={`fixed top-0 left-0 h-full bg-white shadow-xl w-full md:w-96 transform ${
             isChatOpen ? "translate-x-0" : "translate-x-full"

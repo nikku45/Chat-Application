@@ -13,6 +13,7 @@ const profile=require('./Routes/profileRoute')
 const post=require('./Routes/postRoute')
 const likecomment=require('./Routes/likecommentroute');
 const userRoute=require('./Routes/UserRoute')
+const MessageRoute=require('./Routes/MessageRoute');
 const { join } = require('path');
 const { isKeyObject } = require('util/types');
 
@@ -54,6 +55,7 @@ app.use("/api",profile);
 app.use("/api/post",post);
 app.use("/api/posts",likecomment)
 app.use("/api/user",userRoute)
+app.use("/api/message",MessageRoute);
 
 
 
