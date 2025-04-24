@@ -30,7 +30,7 @@ function Feed() {
     
 
     return (
-        <div className="container">
+        <div className="container mt-4 mx-auto px-4">
           {showPostform && <PostForm onPostCreated={fetchPosts} />}
           <button
        style={{

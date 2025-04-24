@@ -1,12 +1,21 @@
 require('dotenv').config();
 const express=require('express');
-const app=express();
 const mongoose=require('mongoose');
+const http = require("http");
+const socketIO = require("socket.io");
+const app=express();
+const server = http.createServer(app);
+const io = socketIO(server);
+
 const cors=require('cors');
 const auth=require('./Routes/authroutes');
 const profile=require('./Routes/profileRoute')
 const post=require('./Routes/postRoute')
-const likecomment=require('./Routes/likecommentroute')
+const likecomment=require('./Routes/likecommentroute');
+const userRoute=require('./Routes/UserRoute')
+const { join } = require('path');
+const { isKeyObject } = require('util/types');
+
 
 
 
@@ -16,10 +25,35 @@ app.use(express.urlencoded({extended:true}));
 
 
 
+io.on("connection", (socket) => {
+    console.log("New user connected:", socket.id);
+
+    socket.on("disconnect", () => {
+        console.log("User disconnected:", socket.id);
+    });
+    socket.on("joinRoom",(roomId)=>{
+        socket.join(roomId);
+        console.log(`user joined on ${roomId}`)
+    })
+   
+    socket.on("sendMessage", ({ roomId, message,sender }) => {
+        
+        // Broadcast the message to everyone in the room
+        io.to(roomId).emit("receiveMessage", { sender:sender, message });
+        console.log(`${sender} send the ${message} on ${roomId}`);
+       
+    });
+    
+   
+});
+
+
+
 app.use("/api/auth",auth);
 app.use("/api",profile);
 app.use("/api/post",post);
 app.use("/api/posts",likecomment)
+app.use("/api/user",userRoute)
 
 
 
@@ -29,7 +63,7 @@ app.use("/api/posts",likecomment)
 
 const PORT=process.env.PORT||5000;
 const MONGO_URI=process.env.MONGO_URI||'mongodb://localhost:27017/Chat-App';
-app.listen(PORT,()=>{
+server.listen(PORT,()=>{
     console.log(`Server is running on port ${PORT}`);
 })
 

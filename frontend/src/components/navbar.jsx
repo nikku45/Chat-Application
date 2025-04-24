@@ -1,0 +1,120 @@
+import React, { useState, useEffect } from "react";
+import Message from "./Message"; // Assuming you have a Message component for the chat
+
+export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false); // For mobile menu
+  const [isChatOpen, setIsChatOpen] = useState(false); // For chat sidebar
+  
+  // Close mobile menu when chat is opened
+  useEffect(() => {
+    if (isChatOpen) setIsOpen(false);
+  }, [isChatOpen]);
+
+  const handleLogout = () => {
+    console.log("handleLogout");
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  };
+
+  return (
+    <nav className="bg-blue-600 text-white px-4 py-3 sticky top-0 z-30">
+      <div className="container mx-auto flex justify-between items-center">
+        {/* Logo */}
+        <div className="text-2xl font-bold cursor-pointer hover:text-blue-200 transition-colors">
+          MyWebsite
+        </div>
+
+        {/* Menu for larger screens */}
+        <div className="hidden md:flex space-x-6">
+          <a href="#" className="hover:text-blue-200 transition-colors py-1">Home</a>
+          <a href="#" className="hover:text-blue-200 transition-colors py-1">About</a>
+          <button
+            className="hover:text-blue-200 transition-colors py-1 relative"
+            onClick={() => setIsChatOpen(true)}
+          >
+            Chat
+          </button>
+          <button
+            className="hover:text-blue-200 transition-colors py-1"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+        </div>
+
+        {/* Hamburger Menu for Mobile */}
+        <button
+          className="md:hidden focus:outline-none"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label="Toggle menu"
+        >
+          <svg
+            className="w-6 h-6 transition-transform duration-300"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ transform: isOpen ? 'rotate(90deg)' : 'rotate(0)' }}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+            />
+          </svg>
+        </button>
+      </div>
+
+      {/* Dropdown Menu for Mobile */}
+      <div 
+        className={`md:hidden overflow-hidden transition-all duration-300 ${
+          isOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="mt-3 space-y-2 bg-blue-700 p-4 rounded-lg">
+          <a href="#" className="block hover:text-blue-200 transition-colors py-2">Home</a>
+          <a href="#" className="block hover:text-blue-200 transition-colors py-2">About</a>
+          <button
+            className="block w-full text-left hover:text-blue-200 transition-colors py-2"
+            onClick={() => setIsChatOpen(true)}
+          >
+            Chat
+          </button>
+          <button
+            className="block w-full text-left hover:text-blue-200 transition-colors py-2"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+
+      {/* Chat Sidebar */}
+      {isChatOpen && (
+          <div
+          className={`fixed top-0 left-0 h-full bg-white shadow-xl w-full md:w-96 transform ${
+            isChatOpen ? "translate-x-0" : "translate-x-full"
+          } transition-transform duration-300 ease-in-out z-50`}
+        >
+          <div className="p-4 flex justify-between items-center bg-blue-600 text-white">
+            <h2 className="text-xl font-bold">Chat</h2>
+            <button
+              onClick={() => setIsChatOpen(false)}
+              className="text-white hover:text-blue-200 text-2xl font-bold focus:outline-none transition-colors"
+              aria-label="Close chat"
+            >
+              &times;
+            </button>
+          </div>
+          <div className="h-full overflow-y-auto pb-20">
+            <Message />
+          </div>
+        </div>
+  
+        )}
+      </nav>
+      
+    
+  );
+}

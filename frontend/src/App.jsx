@@ -8,6 +8,8 @@ import Signup from './pages/signup'
 import Home from './pages/home'
 import Profile from './pages/profile'
 import PrivateRoute from './utils/PrivateRoute'
+import ChatRoom from './components/ChatRoom'
+
 
 
 function App() {
@@ -24,8 +26,11 @@ function App() {
              <Profile />
           </PrivateRoute>
           } />
-
+        
+          <Route path="/chat/:userId" element={<ChatRoom/>} />
           
+          
+
         </Routes>
       </Router>
       </>

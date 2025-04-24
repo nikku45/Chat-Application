@@ -21,12 +21,13 @@ function Login(){
         return alert("Invalid credentials");
             
         }
-        localStorage.setItem('token', data.token)
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userId',data.userId)
+       
         if(res.status==200){
             console.log("Login successful")
             navigate('/')
         }
-        
     }
     return(
      <>
