@@ -2,7 +2,7 @@ require('dotenv').config();
 const cloudinary=require('cloudinary').v2
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 let storage;
-console.log(process.env.CLOUD_API_KEY)
+
 
   try{
     cloudinary.config({ 
@@ -15,7 +15,8 @@ console.log(process.env.CLOUD_API_KEY)
          cloudinary:cloudinary,
         params: {
           folder: 'HiBeen_DEV',
-          allowedformat:  ['png','jpg','jpeg'],
+          resource_type: 'auto', 
+          allowedFormats: ['png', 'jpg', 'jpeg', 'mp3', 'wav']
          
         },
       });

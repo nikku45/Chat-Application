@@ -15,6 +15,9 @@ const MessageSchema=new Schema({
     fileurl:{
         type:String
     },
+    audioUrl:{
+        type:String
+    },
     timestamp:{
         type: Date,
         default: Date.now

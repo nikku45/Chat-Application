@@ -42,10 +42,10 @@ io.on("connection", (socket) => {
         console.log(`user joined on ${roomId}`)
     })
    
-    socket.on("sendMessage", ({ roomId, message,sender,fileurl }) => {
+    socket.on("sendMessage", ({ roomId, message,sender,fileurl,audioUrl }) => {
      
         // Broadcast the message to everyone in the room
-        io.to(roomId).emit("receiveMessage", { sender:sender, message ,fileurl});
+        io.to(roomId).emit("receiveMessage", { sender:sender, message ,fileurl,audioUrl});
         console.log(`${sender} send the ${message} on ${roomId}`);
        
     });
