@@ -12,6 +12,9 @@ const MessageSchema=new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
+    fileurl:{
+        type:String
+    },
     timestamp:{
         type: Date,
         default: Date.now

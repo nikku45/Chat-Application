@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Message from "./Message"; // Assuming you have a Message component for the chat
+import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false); // For mobile menu
   const [isChatOpen, setIsChatOpen] = useState(false); // For chat sidebar
  const[isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('token')?true:false); // For login state
-
+ const navigate = useNavigate();
+  // Initialize useNavigate 
   // Close mobile menu when chat is opened
   useEffect(() => {
     if (isChatOpen) setIsOpen(false);
@@ -29,18 +31,27 @@ export default function Navbar() {
         <div className="hidden md:flex space-x-6">
           <a href="#" className="hover:text-blue-200 transition-colors py-1">Home</a>
           <a href="#" className="hover:text-blue-200 transition-colors py-1">About</a>
-          <button
+          {isLoggedIn&&(<button
             className="hover:text-blue-200 transition-colors py-1 relative"
             onClick={() => setIsChatOpen(true)}
           >
             Chat
-          </button>
-          <button
+          </button>)}
+         {isLoggedIn&&( <button
             className="hover:text-blue-200 transition-colors py-1"
             onClick={handleLogout}
           >
             Logout
           </button>
+          )}
+          {!isLoggedIn && (
+            <button
+              className="hover:text-blue-200 transition-colors py-1"
+              onClick={() => navigate("/login")}
+            >
+              Login
+            </button>
+           )}
         </div>
 
         {/* Hamburger Menu for Mobile */}
@@ -94,7 +105,7 @@ export default function Navbar() {
       {/* Chat Sidebar */}
       {isChatOpen && isLoggedIn && (
           <div
-          className={`fixed top-0 left-0 h-full bg-white shadow-xl w-full md:w-96 transform ${
+          className={`fixed top-0 left-0 h-full bg-white shadow-xl w-full md:w-120 transform ${
             isChatOpen ? "translate-x-0" : "translate-x-full"
           } transition-transform duration-300 ease-in-out z-50`}
         >

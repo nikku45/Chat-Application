@@ -6,6 +6,7 @@ const socketIO = require("socket.io");
 const app=express();
 const server = http.createServer(app);
 const io = socketIO(server);
+const path=require('path')
 
 const cors=require('cors');
 const auth=require('./Routes/authroutes');
@@ -14,6 +15,9 @@ const post=require('./Routes/postRoute')
 const likecomment=require('./Routes/likecommentroute');
 const userRoute=require('./Routes/UserRoute')
 const MessageRoute=require('./Routes/MessageRoute');
+const FilesRoute=require('./Routes/FilesRoute')
+
+
 const { join } = require('path');
 const { isKeyObject } = require('util/types');
 
@@ -23,6 +27,7 @@ const { isKeyObject } = require('util/types');
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+
 
 
 
@@ -37,10 +42,10 @@ io.on("connection", (socket) => {
         console.log(`user joined on ${roomId}`)
     })
    
-    socket.on("sendMessage", ({ roomId, message,sender }) => {
-        
+    socket.on("sendMessage", ({ roomId, message,sender,fileurl }) => {
+     
         // Broadcast the message to everyone in the room
-        io.to(roomId).emit("receiveMessage", { sender:sender, message });
+        io.to(roomId).emit("receiveMessage", { sender:sender, message ,fileurl});
         console.log(`${sender} send the ${message} on ${roomId}`);
        
     });
@@ -49,6 +54,7 @@ io.on("connection", (socket) => {
 });
 
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use("/api/auth",auth);
 app.use("/api",profile);
@@ -56,6 +62,8 @@ app.use("/api/post",post);
 app.use("/api/posts",likecomment)
 app.use("/api/user",userRoute)
 app.use("/api/message",MessageRoute);
+app.use("/api/filesharing",FilesRoute);
+
 
 
 

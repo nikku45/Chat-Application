@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import socket from "../utils/socket"; // Import the singleton instance
+import Imageviewer from "./Imageviewer"; // Import the ImageViewer component
 
 export default function ChatRoom({ selectedUser, setSelectedUser }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const [file, setFile] = useState(null);
   const messagesEndRef = useRef(null);
 
   const userId = selectedUser?._id;
@@ -19,15 +21,14 @@ export default function ChatRoom({ selectedUser, setSelectedUser }) {
 
   useEffect(scrollToBottom, [messages]);
 
-  // Function to save messages to the database
-  const saveMessageToDatabase = async (roomId, msg, sender) => {
+  const saveMessageToDatabase = async (roomId, msg, sender, fileurl) => {
     try {
       const response = await fetch(`http://localhost:5000/api/message/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ roomId, msg, userId: sender }),
+        body: JSON.stringify({ roomId, msg, userId: sender, fileurl }),
       });
       const result = await response.json();
       console.log("Message saved:", result);
@@ -36,7 +37,6 @@ export default function ChatRoom({ selectedUser, setSelectedUser }) {
     }
   };
 
-  // Fetch existing messages and setup socket listeners
   useEffect(() => {
     if (!roomId) {
       console.error("Room ID is undefined or invalid");
@@ -50,15 +50,13 @@ export default function ChatRoom({ selectedUser, setSelectedUser }) {
           headers: { "Content-Type": "application/json" },
         });
         const data = await res.json();
-        
+
         const formattedMessages = (data || []).map((msg) => ({
           text: msg.message,
           sender: msg.sender,
-          timestamp: msg.timestamp, // If needed for sorting or display
+          fileurl: msg.fileurl?msg.fileurl:null,
         }));
-  
         setMessages(formattedMessages);
-       
       } catch (err) {
         console.error("Error fetching messages:", err);
       }
@@ -66,15 +64,14 @@ export default function ChatRoom({ selectedUser, setSelectedUser }) {
 
     fetchMessages();
     socket.emit("joinRoom", roomId);
-    console.log(`Joined room: ${roomId}`);
 
     const handleReceiveMessage = (data) => {
       if (data.sender && data.sender !== myId) {
         setMessages((prevMessages) => [
           ...prevMessages,
-          { text: data.message, sender: data.sender },
+          { text: data.message, sender: data.sender, fileurl: data.fileurl || null },
         ]);
-        saveMessageToDatabase(roomId, data.message, data.sender);
+        saveMessageToDatabase(roomId, data.message, data.sender, data.fileurl);
       }
     };
 
@@ -85,22 +82,47 @@ export default function ChatRoom({ selectedUser, setSelectedUser }) {
     };
   }, [roomId]);
 
-  const handleSendMessage = () => {
-    if (input.trim() === "") return;
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    let fileurl = null;
 
-    socket.emit("sendMessage", { roomId, message: input, sender: myId });
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const response = await fetch("http://localhost:5000/api/filesharing/upload", {
+          method: "POST",
+          body: formData,
+        });
+        if (!response.ok) {
+          throw new Error("File upload failed");
+        }
+        const data = await response.json();
+        fileurl = data.fileUrl;
+        console.log("File uploaded successfully:", fileurl);
+      
+      } catch (error) {
+        console.error("Error uploading file:", error);
+      }
+    }
+
+    if (input.trim() === "" && !file) return;
+
+    socket.emit("sendMessage", { roomId, message: input, sender: myId, fileurl: fileurl });
     setMessages((prevMessages) => [
       ...prevMessages,
-      { text: input, sender: myId },
+      { text: input, sender: myId, fileurl: fileurl },
     ]);
-    saveMessageToDatabase(roomId, input, myId); // Save the message to the database
-    setInput(""); // Clear input field
+    saveMessageToDatabase(roomId, input, myId, fileurl);
+    setInput("");
+    setFile(null);
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
     }
   };
 
@@ -152,7 +174,26 @@ export default function ChatRoom({ selectedUser, setSelectedUser }) {
                   : "bg-white text-gray-800"
               }`}
             >
-              {message.text || message}
+              {message.text || message.fileurl ? (
+                <>
+                  <div className="text-sm text-gray-500 mb-1">
+                   
+                  {message.text && <p>{message.text}</p>}
+                  </div>
+                  
+                  {message.fileurl && (
+                   <Imageviewer imageUrl={message.fileurl} />
+                  )}
+                  <div className="text-sm text-gray-500 mb-1">
+                    {new Date().toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </div>
+                </>
+              ) : (
+                "Message content unavailable"
+              )}
             </div>
           </div>
         ))}
@@ -161,20 +202,29 @@ export default function ChatRoom({ selectedUser, setSelectedUser }) {
 
       {/* Input Section */}
       <div className="absolute bottom-0 left-0 right-0 bg-white text-gray-700 border-t border-gray-200 p-4">
-        <div className="flex items-center">
-          <textarea
+        <form onSubmit={handleSendMessage} className="flex items-center w-full">
+        <textarea
             placeholder="Type a message..."
             className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyPress={handleKeyPress}
             rows={1}
             style={{ maxHeight: "120px" }}
           />
+        <input
+            type="file"
+            onChange={handleFileChange}
+            className=""
+            style={{ width: "100px", marginLeft: "10px" }} 
+            
+            accept="image/*"
+          />
+         
+        
           <button
+            type="submit"
             className="ml-3 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:opacity-50"
-            onClick={handleSendMessage}
-            disabled={input.trim() === ""}
+            disabled={input.trim() === "" && !file}
           >
             <svg
               className="w-5 h-5"
@@ -191,7 +241,7 @@ export default function ChatRoom({ selectedUser, setSelectedUser }) {
               />
             </svg>
           </button>
-        </div>
+        </form>
       </div>
     </div>
   );

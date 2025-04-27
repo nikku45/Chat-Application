@@ -6,12 +6,14 @@ const Message=require('../models/Messages.js');
 
 router.post("/", async(req,res)=>{
     try{
+        console.log(req.fileurl);
+        const{msg,userId,roomId,fileurl}=req.body
         
-        
-        const{msg,userId,roomId}=req.body
-        const message=new Message({roomId,message:msg,sender:userId});
+        const message=new Message({roomId,message:msg,sender:userId,fileurl});
         const result= await message.save();
+       ;
         res.status(200).json("message has benn saved");
+        
     }catch(err){
         res.status(500).json(err);
     }

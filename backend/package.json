@@ -12,12 +12,16 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
+    "connect-mongo": "^5.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
+    "gridfs-stream": "^1.1.1",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.13.2",
-    "multer": "^1.4.5-lts.2",
+    "mongodb": "^5.9.1",
+    "mongoose": "^8.14.0",
+    "multer-gridfs-storage": "^5.0.2",
+    "multer-storage-cloudinary": "^4.0.0",
     "socket.io": "^4.8.1"
   }
 }
