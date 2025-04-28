@@ -8,7 +8,8 @@ import Signup from './pages/signup'
 import Home from './pages/home'
 import Profile from './pages/profile'
 import PrivateRoute from './utils/PrivateRoute'
-import ChatRoom from './components/ChatRoom'
+import VideoChat from './pages/VideoChat'
+
 
 
 
@@ -27,7 +28,7 @@ function App() {
           </PrivateRoute>
           } />
         
-          <Route path="/chat/:userId" element={<ChatRoom/>} />
+          <Route path='/videochat/:roomId' element={<VideoChat/>}/>
           
           
 

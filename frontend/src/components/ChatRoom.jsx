@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import socket from "../utils/socket"; // Import the singleton instance
 import Imageviewer from "./Imageviewer"; // Import the ImageViewer component
 import {startRecording, stopRecording, uploadAudio} from "../utils/RecordingFunction"; // Import the recorder functions
-
+import { useNavigate } from "react-router-dom";
 export default function ChatRoom({ selectedUser, setSelectedUser }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -13,6 +13,7 @@ export default function ChatRoom({ selectedUser, setSelectedUser }) {
   const [visualizerValues, setVisualizerValues] = useState(Array(10).fill(2));
   let audioUrl = null; // Variable to store the audio URL
   
+  const navigate=useNavigate();
 
   const messagesEndRef = useRef(null);
 
@@ -86,8 +87,10 @@ export default function ChatRoom({ selectedUser, setSelectedUser }) {
         console.error("Error fetching messages:", err);
       }
     };
-
+     
     fetchMessages();
+    socket.connect();
+    console.log(roomId)
     socket.emit("joinRoom", roomId);
 
     const handleReceiveMessage = (data) => {
@@ -196,6 +199,7 @@ export default function ChatRoom({ selectedUser, setSelectedUser }) {
           </svg>
           Back
         </button>
+        <button onClick={()=>navigate(`./videochat/${roomId}`)}>videoCall</button>
         <div className="flex items-center">
           <div className="w-8 h-8 rounded-full bg-blue-400 flex items-center justify-center text-white mr-2">
             {username.charAt(0).toUpperCase()}

@@ -31,27 +31,65 @@ app.use(express.urlencoded({extended:true}));
 
 
 
+const rooms={};
+
 io.on("connection", (socket) => {
+  
+  socket.on("connect", () => {
+    console.log("Connected to server with ID:", socket.id);
+  
+  });
     console.log("New user connected:", socket.id);
 
     socket.on("disconnect", () => {
         console.log("User disconnected:", socket.id);
     });
-    socket.on("joinRoom",(roomId)=>{
+    socket.on("joinRoom", ( roomId ) => {
+        console.log(`${socket.id} joined room: ${roomId}`);
+    
+        // Add the user to the room
         socket.join(roomId);
-        console.log(`user joined on ${roomId}`)
-    })
+        if (!rooms[roomId]) {
+          rooms[roomId] = [];
+        }
+        rooms[roomId].push(socket.id);
+    
+        // Notify other users in the room
+        socket.to(roomId).emit("user-joined", { userId: socket.id });
+      });
    
     socket.on("sendMessage", ({ roomId, message,sender,fileurl,audioUrl }) => {
-     
         // Broadcast the message to everyone in the room
         io.to(roomId).emit("receiveMessage", { sender:sender, message ,fileurl,audioUrl});
         console.log(`${sender} send the ${message} on ${roomId}`);
-       
+        
     });
+    
+    socket.on("call-user", ({ to, offer }) => {
+        console.log(offer)
+        console.log(`Call initiated by ${socket.id} to ${to}`);
+        io.to(to).emit("incoming-call", { from: socket.id, offer });
+    });
+    
+      // Handle answeridfng a call
+     socket.on("answer-call", ({ to, answer }) => {
+        console.log(`${socket.id} answered call from ${to}`);
+        console.log(answer)
+        io.to(to).emit("call-answered", { answer });
+    });
+    
+      // Handle ICE candidate exchange
+    socket.on("ice-candidate", ({ to, candidate }) => {
+        console.log(`ICE candidate sent from ${socket.id} to ${to}`);
+        io.to(to).emit("ice-candidate", { candidate });
+    });
+    socket.on("relay-ice-candidate", ({ to, candidate }) => {
+        socket.to(to).emit("ice-candidate", { from: socket.id, candidate });
+      });
     
    
 });
+
 
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
