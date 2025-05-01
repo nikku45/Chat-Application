@@ -12,7 +12,7 @@ export default function Message() {
     const fetchUsers = async () => {
       setLoading(true);
       try {
-        const response = await fetch("http://localhost:5000/api/user");
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/user`);
         if (!response.ok) {
           throw new Error("Failed to fetch users");
         }

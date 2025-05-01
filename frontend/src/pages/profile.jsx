@@ -17,7 +17,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       console.log("API has been called");
       try {
-        const res = await fetch("http://localhost:5000/api/profile", {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/profile`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`
           }
@@ -94,7 +94,7 @@ const Profile = () => {
         formData.append("profilePicture", editForm.profilePicture);
       }
       
-      const res = await fetch("http://localhost:5000/api/profile/update", {
+      const res = await fetch(`${REACT_APP_API_URL}/api/profile/update`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`

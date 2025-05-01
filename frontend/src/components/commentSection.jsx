@@ -32,7 +32,7 @@ const CommentSection = ({ post, setPosts }) => {
         setLoading(true);
 
         try {
-            const res = await fetch(`/api/posts/${post._id}/comment`, {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/posts/${post._id}/comment`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

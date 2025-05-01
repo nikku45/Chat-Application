@@ -11,12 +11,9 @@ function Feed() {
     const[showPostform,setshowPostform]=useState(false)
 
     const fetchPosts = async () => {
-        const res = await fetch('/api/post/getposts', {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/post/getposts`, {
             method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('token')}`,
-            },
+            
         })
         const data = await res.json();
         setPosts(data)

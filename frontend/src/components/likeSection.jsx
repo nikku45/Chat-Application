@@ -15,7 +15,7 @@ const LikeButton = ({ post, setPosts }) => {
     setAnimated(true);
     
     try {
-      const response = await fetch(`/api/posts/${post._id}/like`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/posts/${post._id}/like`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
