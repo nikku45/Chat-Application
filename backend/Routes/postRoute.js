@@ -4,7 +4,7 @@ const mongoose=require('mongoose');
 
 const router=express.Router();
 const Post=require('../models/Post');
-const User=require('../Models/User');
+const User=require('../models/User');
 const verifyToken=require('../middleware.js');
 
 

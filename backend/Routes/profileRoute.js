@@ -1,7 +1,7 @@
 const express=require('express');
 const app=express()
 const router=express.Router();
-const User=require('../Models/User');
+const User=require('../models/User')
 const verifyToken=require('../middleware.js');
 const multer = require('multer');
 const { storage } = require('../cloudConfig.js')

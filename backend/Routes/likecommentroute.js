@@ -4,7 +4,7 @@ const app=express();
 
 const router=express.Router();
 const Post=require('../models/Post.js');
-const User=require('../Models/User.js');
+const User=require('../models/User.js');
 const verifyToken=require('../middleware.js');
 
 app.use(express.json());
