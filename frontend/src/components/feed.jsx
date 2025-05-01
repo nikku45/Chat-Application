@@ -11,7 +11,7 @@ function Feed() {
     const[showPostform,setshowPostform]=useState(false)
 
     const fetchPosts = async () => {
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/post/getposts`, {
+        const res = await fetch(`https://chat-application-wqtj.onrender.com/api/post/getposts`, {
             method: 'GET',
             
         })
