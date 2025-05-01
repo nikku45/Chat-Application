@@ -1,22 +1,39 @@
 import React, { useState, useEffect } from "react";
 import Message from "./Message"; // Assuming you have a Message component for the chat
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { useNavigate } from "react-router-dom";
+import { Menu, MenuItem, Avatar, IconButton } from "@mui/material";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false); // For mobile menu
   const [isChatOpen, setIsChatOpen] = useState(false); // For chat sidebar
- const[isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('token')?true:false); // For login state
- const navigate = useNavigate();
-  // Initialize useNavigate 
-  // Close mobile menu when chat is opened
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("token") ? true : false); // For login state
+  const [profileMenuAnchor, setProfileMenuAnchor] = useState(null); // For profile dropdown
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (isChatOpen) setIsOpen(false);
   }, [isChatOpen]);
 
   const handleLogout = () => {
-    console.log("handleLogout");
     localStorage.removeItem("token");
     window.location.href = "/login";
+  };
+
+  const handleProfileMenuOpen = (event) => {
+    setProfileMenuAnchor(event.currentTarget);
+  };
+
+  const handleProfileMenuClose = () => {
+    setProfileMenuAnchor(null);
+  };
+
+  const handleProfileMenuClick = (option) => {
+    handleProfileMenuClose();
+    if (option === "Profile") {
+      navigate("/profile");
+    } else if (option === "Logout") {
+      handleLogout();
+    }
   };
 
   return (
@@ -28,30 +45,33 @@ export default function Navbar() {
         </div>
 
         {/* Menu for larger screens */}
-        <div className="hidden md:flex space-x-6">
-          <a href="#" className="hover:text-blue-200 transition-colors py-1">Home</a>
-          <a href="#" className="hover:text-blue-200 transition-colors py-1">About</a>
-          {isLoggedIn&&(<button
-            className="hover:text-blue-200 transition-colors py-1 relative"
-            onClick={() => setIsChatOpen(true)}
-          >
-            Chat
-          </button>)}
-         {isLoggedIn&&( <button
-            className="hover:text-blue-200 transition-colors py-1"
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
+        <div className="hidden md:flex space-x-6 items-center">
+          <a href="#" className="hover:text-blue-200 transition-colors py-1">
+            Home
+          </a>
+          <a href="#" className="hover:text-blue-200 transition-colors py-1">
+            About
+          </a>
+          {isLoggedIn && (
+            <button
+              className="hover:text-blue-200 transition-colors py-1 relative"
+              onClick={() => setIsChatOpen(true)}
+            >
+              Chat
+            </button>
           )}
-          {!isLoggedIn && (
+          {!isLoggedIn ? (
             <button
               className="hover:text-blue-200 transition-colors py-1"
               onClick={() => navigate("/login")}
             >
               Login
             </button>
-           )}
+          ) : (
+            <IconButton onClick={handleProfileMenuOpen}>
+              <Avatar alt="Profile" src="/path-to-avatar.jpg" />
+            </IconButton>
+          )}
         </div>
 
         {/* Hamburger Menu for Mobile */}
@@ -66,7 +86,7 @@ export default function Navbar() {
             stroke="currentColor"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
-            style={{ transform: isOpen ? 'rotate(90deg)' : 'rotate(0)' }}
+            style={{ transform: isOpen ? "rotate(90deg)" : "rotate(0)" }}
           >
             <path
               strokeLinecap="round"
@@ -78,34 +98,69 @@ export default function Navbar() {
         </button>
       </div>
 
+      {/* Profile Dropdown */}
+      <Menu
+        anchorEl={profileMenuAnchor}
+        open={Boolean(profileMenuAnchor)}
+        onClose={handleProfileMenuClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <MenuItem onClick={() => handleProfileMenuClick("Profile")}>
+          Profile
+        </MenuItem>
+        <MenuItem onClick={() => handleProfileMenuClick("Logout")}>
+          Logout
+        </MenuItem>
+      </Menu>
+
       {/* Dropdown Menu for Mobile */}
-      <div 
+      <div
         className={`md:hidden overflow-hidden transition-all duration-300 ${
           isOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <div className="mt-3 space-y-2 bg-blue-700 p-4 rounded-lg">
-          <a href="#" className="block hover:text-blue-200 transition-colors py-2">Home</a>
-          <a href="#" className="block hover:text-blue-200 transition-colors py-2">About</a>
+          <a href="#" className="block hover:text-blue-200 transition-colors py-2">
+            Home
+          </a>
+          <a href="#" className="block hover:text-blue-200 transition-colors py-2">
+            About
+          </a>
           <button
             className="block w-full text-left hover:text-blue-200 transition-colors py-2"
             onClick={() => setIsChatOpen(true)}
           >
             Chat
           </button>
-          <button
-            className="block w-full text-left hover:text-blue-200 transition-colors py-2"
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
+          {!isLoggedIn ? (
+            <button
+              className="block w-full text-left hover:text-blue-200 transition-colors py-2"
+              onClick={() => navigate("/login")}
+            >
+              Login
+            </button>
+          ) : (
+            <button
+              className="block w-full text-left hover:text-blue-200 transition-colors py-2"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          )}
         </div>
       </div>
 
       {/* Chat Sidebar */}
       {isChatOpen && isLoggedIn && (
-          <div
-          className={`fixed top-0 left-0 h-full bg-white shadow-xl w-full md:w-120 transform ${
+        <div
+          className={`fixed top-0 left-0 h-full bg-white shadow-xl w-full md:w-340 transform ${
             isChatOpen ? "translate-x-0" : "translate-x-full"
           } transition-transform duration-300 ease-in-out z-50`}
         >
@@ -123,10 +178,7 @@ export default function Navbar() {
             <Message />
           </div>
         </div>
-  
-        )}
-      </nav>
-      
-    
+      )}
+    </nav>
   );
 }

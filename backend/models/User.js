@@ -27,10 +27,40 @@ const userSchema=new Schema({
         type:[String],
         default:[]
     },
+  
+    bio:{
+        type:String
+    },
+    Followers:{
+        type:Number
+    },
+    stats:{
+       posts:[
+        {
+           type: mongoose.Schema.Types.ObjectId,
+           ref:"Post"
+        }
+       ],
+       followers:[
+        {
+             type: mongoose.Schema.Types.ObjectId,
+             ref:"user"
+        }
+       ],
+       following:[
+        {
+             type: mongoose.Schema.Types.ObjectId,
+             ref:"user"
+        }
+       ]
+
+
+    },
     lastSeen:{
         type:Date,
         default:Date.now
     },
+
     status:{
         type:String,
         default:"offline"

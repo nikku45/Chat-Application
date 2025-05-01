@@ -1,10 +1,11 @@
+require('dotenv').config()
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../Models/User");
 
-const secret = "mysecret"; 
+const secret = process.env.JWT_Secret||'mysecret'; 
 
 router.post("/signup", async (req, res) => {
     const { username, email, password } = req.body;

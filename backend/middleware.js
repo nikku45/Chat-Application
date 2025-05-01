@@ -25,6 +25,7 @@ const verifyToken = (req, res, next) => {
       
 
         req.user = verified; // Attach user data to request
+        console.log("user has been verified")
         next();
     } catch (err) {
         return res.status(403).json({ message: "Invalid Token" });

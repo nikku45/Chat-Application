@@ -25,4 +25,4 @@ let storage;
   }
  
       
-      module.exports={cloudinary,storage};
+   module.exports={cloudinary,storage};
