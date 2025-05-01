@@ -12,7 +12,7 @@ function Signup(){
      const handleSubmit=async(e)=>{
         e.preventDefault();
         console.log("submit")
-        const res=await fetch(`${process.env.REACT_APP_API_URL}/api/auth/signup`,
+        const res=await fetch(`${import.meta.env.VITE_APP_API_URL}/api/auth/signup`,
            {
             method:'POST',
             headers:{

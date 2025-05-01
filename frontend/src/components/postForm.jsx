@@ -8,7 +8,7 @@ function PostForm({ onPostCreated }) {
     e.preventDefault();
   
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/post/create`, {
+      const res = await fetch(`${import.meta.env.VITE_APP_API_URL}/api/post/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

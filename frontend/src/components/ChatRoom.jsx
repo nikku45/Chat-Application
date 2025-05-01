@@ -49,7 +49,7 @@ export default function ChatRoom({ selectedUser, setSelectedUser }) {
 
   const saveMessageToDatabase = async (roomId, msg, sender, fileurl, audioUrl) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/message/`, {
+      const response = await fetch(`${import.meta.env.VITE}/api/message/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -71,7 +71,7 @@ export default function ChatRoom({ selectedUser, setSelectedUser }) {
 
     const fetchMessages = async () => {
       try {
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/message/${roomId}`, {
+        const res = await fetch(`${import.meta.env.VITE_APP_API_URL}/api/message/${roomId}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -120,7 +120,7 @@ export default function ChatRoom({ selectedUser, setSelectedUser }) {
       formData.append("file", file);
 
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/filesharing/chat/upload`, {
+        const response = await fetch(`${import.meta.env.VITE_APP_API_URL}/api/filesharing/chat/upload`, {
           method: "POST",
           body: formData,
         });

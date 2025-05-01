@@ -12,7 +12,7 @@ export default function Message() {
     const fetchUsers = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/user`);
+        const response = await fetch(`${import.meta.env.VITE_APP_API_URL}/api/user`);
         if (!response.ok) {
           throw new Error("Failed to fetch users");
         }
