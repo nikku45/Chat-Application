@@ -76,7 +76,7 @@ function AvatarMenu() {
               {/* Login */}
               <button
                 className="flex items-center gap-2 w-full px-3 py-2 rounded-lg hover:bg-purple-50 text-sm text-gray-700"
-                onClick={() => (window.location.href = "/login")}
+                onClick={() => navigate('/login')}
               >
                 <LogIn size={18} className="text-purple-600" />
                 Login
