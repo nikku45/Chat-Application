@@ -49,7 +49,7 @@ const uploadAudio = async ( audioBlob) => {
     formData.append('audio', audioBlob, 'recording.mp3'); // Use the desired audio format
 
     try {   
-        const response = await fetch("http://localhost:5000/api/filesharing/chat/upload-voice", {
+        const response = await fetch(`${import.meta.env.VITE_APP_API_URL}/api/filesharing/chat/upload-voice`, {
             method: "POST", // Fixed typo: 'mehod' -> 'method'
             body: formData,
         });

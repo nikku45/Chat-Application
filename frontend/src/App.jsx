@@ -1,44 +1,79 @@
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Navbar from "./components/navbar";
+import Sidebar from "./components/sidebar";
+import Feed from "./components/feed";
+import ChatSection from "./components/Message";
+import PrivateRoute from "./utils/PrivateRoute";
+import Profile from "./pages/Profile";
+import VideoChat from "./pages/VideoChat";
+import NotFound from "./pages/NotFound";
+import Login from "./pages/login";
+import Signup from "./pages/signup";
 
-import React from 'react'   
-import { useState } from 'react'
-import './index.css'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import  Login  from './pages/login'
-import Signup from './pages/signup'
-import Home from './pages/home'
-import Profile from './pages/profile'
-import PrivateRoute from './utils/PrivateRoute'
-import VideoChat from './pages/VideoChat'
-
-
-
-
-function App() {
-  
+const App = () => {
   return (
-    <>
-    <ToastContainer position="top-right" />
-    <Router>
-       <Routes>
-          <Route path='/'      element ={<Home/>} />
-          <Route path='/login' element ={<Login/>} />
-          <Route path='/signup' element={<Signup/>} />
-          <Route path="/profile" element={
-          <PrivateRoute>
-             <Profile />
-          </PrivateRoute>
-          } />
+    <BrowserRouter>
+      <div className="h-screen flex flex-col bg-gradient-to-br from-purple-400 to-purple-600">
         
-          <Route path='/videochat/:roomId' element={<VideoChat/>}/>
-          
-          
+        <Navbar />
 
-        </Routes>
-      </Router>
-      </>
-  )
-}
+        <div className="flex flex-1 overflow-hidden">
+          <Sidebar />
 
-export default App
+          <main className="flex-1 p-4 overflow-hidden">
+            <Routes>
+              {/* Public */}
+              <Route path="/" element={<Feed />} />
+
+              {/* Protected */}
+              <Route
+                path="/chat"
+                element={
+                  <PrivateRoute>
+                    <ChatSection />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/profile"
+                element={
+                  <PrivateRoute>
+                    <Profile />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/login"
+                element={
+                  <Login/>
+                }
+              />
+              <Route
+              path='/signup'
+              element={
+                <Signup/>
+              }
+              />
+              <Route
+              path="/videochat/:roomId"
+              element={
+                <PrivateRoute>
+                  <VideoChat />
+                </PrivateRoute>
+              }
+              />
+
+              {/* Fallback */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+        </div>
+
+      </div>
+    </BrowserRouter>
+  );
+};
+
+export default App;

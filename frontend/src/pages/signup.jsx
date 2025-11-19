@@ -36,13 +36,6 @@ function Signup(){
      }
     return(
        <>
-        {/* <form onSubmit={handleSubmit}>
-        <h1 class="underline">Signup</h1>
-        <input type="text" onChange ={(e)=>setUsername(e.target.value)}name="username" value={username} placeholder="Enter username" required></input>
-        <input type="email"  onChange={(e) => setEmail(e.target.value)} value={email}name="email" placeholder="Enter email"/>
-        <input type="password"  onChange={(e) => setPassword(e.target.value)} value={password}name="password" placeholder="Enter password"/>
-        <button>Submit</button>
-        </form> */}
         <section class="bg-gray-50 dark:bg-gray-900">
   <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
       <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">

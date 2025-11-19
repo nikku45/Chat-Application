@@ -25,9 +25,9 @@ const { isKeyObject } = require('util/types');
 
 
 app.use(cors({
-  origin: "https://hi-mate.onrender.com",
+  origin: "*", // Allow all origins for development; restrict in production
   methods: "GET,POST,PUT,DELETE",
-  credentials: true, 
+  credentials: true, // Allow credentials if needed
 }));
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));

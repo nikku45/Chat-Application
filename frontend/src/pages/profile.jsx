@@ -15,7 +15,7 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      console.log("API has been called");
+
       try {
         const res = await fetch(`${import.meta.env.VITE_APP_API_URL}/api/profile`, {
           headers: {

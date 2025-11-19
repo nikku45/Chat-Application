@@ -15,17 +15,14 @@ const LikeButton = ({ post, setPosts }) => {
     setAnimated(true);
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_APP_API_URL}/posts/${post._id}/like`, {
+      const response = await fetch(`${import.meta.env.VITE_APP_API_URL}/api/posts/${post._id}/like`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      
-      if (!response.ok) {
-        throw new Error("Failed to like post");
-      }
-      
+      console.log("Response status:", response);
+     
       const data = await response.json();
       
       // Optimistically update the UI
@@ -45,7 +42,7 @@ const LikeButton = ({ post, setPosts }) => {
       );
       
     } catch (error) {
-      console.error("Error liking post:", error);
+      console.log("Error liking post:", error);
     } finally {
       setIsLoading(false);
       // Reset animation after it completes
