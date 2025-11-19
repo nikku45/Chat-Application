@@ -5,7 +5,7 @@ import Sidebar from "./components/sidebar";
 import Feed from "./components/feed";
 import ChatSection from "./components/Message";
 import PrivateRoute from "./utils/PrivateRoute";
-import Profile from "./pages/Profile";
+import Profile from "./pages/profile";
 import VideoChat from "./pages/VideoChat";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/login";
