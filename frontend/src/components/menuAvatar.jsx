@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { LogOut, User, LogIn } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function AvatarMenu() {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
+  const navigate = useNavigate();
 
   const token = localStorage.getItem("token");
   const username = localStorage.getItem("username");
@@ -14,11 +16,9 @@ function AvatarMenu() {
 
   const handleLogout = () => {
     localStorage.clear();
-    
-    window.location.reload();
-    Navigate('/'); // Redirect to home after logout
-    
+    navigate('/'); 
 
+    // Redirect to home after logout
   };
 
   // close dropdown on outside click
